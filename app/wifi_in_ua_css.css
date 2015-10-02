@@ -1,0 +1,184 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    line-height: 200%;
+    color: #281E53;
+    vertical-align: middle;
+    text-align: center;
+}
+
+@media (orientation:landscape) {
+    html.ipad.ios7 > body {
+        position: fixed;
+        bottom: 0;
+        width:100%;
+        height: 672px !important;
+    }
+}
+
+body, html, table * {
+    margin: 0;
+    padding: 0;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    z-index: 999;
+    background: #E1E1E1;
+    width: 100%;
+    height: 7%;
+    text-align: center;
+    overflow: hidden;
+}
+
+#footer img{
+    height: 90%;
+    width: auto;
+    display: inline-block;
+    margin:2px;
+    cursor: pointer;
+}
+
+#butt{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 100px;
+    height: 120px;
+    overflow: hidden;
+    margin-top: -60px;
+    margin-left: -50px;
+    color: white;
+    font-weight: bold;
+    line-height: 100%;
+}
+
+/*
+#buttons {
+    height: 100%;
+    text-align: center;
+}
+
+.but0{
+    display: inline-block;
+    height: 100%;
+    background: blue;
+}
+*/
+#numberCountdown_holder{
+    display: inline-block;
+    height: 100%;
+    background: url('/template/img/edu_calc_grad.png');
+    background-size: 100% 100%;
+    font-size: 20px;
+    margin: 0 50px;
+    font-weight: bold;
+    text-align: center;
+    width: 32px;
+}
+/*
+#edupage_layout, #eduvideo_layout{
+    height: 90%;
+    width: 100%;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+*/
+
+table{
+    width: 100%;
+    height: 93%;
+    border-collapse: collapse;
+}
+
+table tr {
+    height: 100%;
+}
+
+table tr td {
+    vertical-align: middle;
+    text-align: center;
+    height: 100%;
+}
+/*
+video{
+    display: none;
+}
+*/
+._overlogo {
+    padding-bottom: 8px;
+    width: auto !important;
+    height: auto !important;
+}
+
+#videoposter {
+    position: absolute;
+    z-index: -1;
+}
+
+#progressbar {
+    background-color: black;
+    border-radius: 13px;
+    display: none;
+    position: absolute;
+    width: 100%;
+    bottom: 7%;
+    z-index: 100;
+    height: 3px;
+}
+
+#progressbar_play {
+    background-color: #04a940;
+    width: 0;
+    height: 3px;
+    position: absolute;
+    z-index: 2;
+}
+
+#progressbar_load {
+    background-color: #c0c0c0;
+    width: 0;
+    height: 3px;
+    z-index: 1;
+    position: absolute;
+}
+
+#loader {
+    position: absolute;
+    z-index: 110;
+    left: 50%;
+    top: 50%;
+    background: url('/template/img/loading_transparent.gif') no-repeat;
+    margin-top: -23px;
+    margin-left: -23px;
+    width: 46px;
+    height: 46px;
+    display: none;
+}
+
+/**
+* Styles to fix the new iOS 7 transparent status bar
+*/
+/*
+.ios7{
+    height: calc(100% - 20px);
+}*/
+
+#loader_window{
+    position: absolute;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.1);
+    display: none;
+    z-index: 999;
+}

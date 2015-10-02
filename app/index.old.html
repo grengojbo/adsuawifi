@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ocean Plaza Wi-Fi</title>
+<link rel="stylesheet" href="./pure-min.css" media="screen">
+<link rel="stylesheet" href="./main.css" media="screen">
+<link href="favicon.ico" type="image/x-icon" rel="icon"/><link href="favicon.ico" type="image/x-icon" rel="shortcut icon"/>
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="expires" content="-1" />
+<script type="text/javascript" src="openx.adserver.js"></script>
+</head>
+<body>
+<div class="pure-g-r" id="layout">
+	<div class="pure-u-1" id="wifi-ad"></div>
+	<div class="pure-u-1" id="footer"><a class="pure-button pure-input-1-1 pure-button-primary" href='http://oceanplaza.com.ua/'>Internet</a></div>
+</div>
+<script>
+var OA_zones = { 'wifi-ad' : 1 }
+window.onload = function()
+  {
+    openx.init({
+      url: '127.0.0.1:8000/b/code/',
+      //url: '109.237.88.6/b/code/',
+      go: 'ip',
+      zone: {
+        'wifi-ad': {
+          phone: 2,
+          table: 3
+        }
+      },
+      mediacss: {
+        phone: '(max-width: 480px)',
+        // table: '(min-width: 769px)'
+        // phone: '(min-width: 769px)',
+        table: '(max-width: 768px)'
+      },
+      url: '127.0.0.1:8000/b/code/'
+      //url: '109.237.88.6/b/code/'
+      //url: 'http://ads.sky5.com.ua/spc.js'
+      //url: 'http://ads.sky5.com.ua/ajs/'
+    });
+  }
+  </script>
+</body>
+</html>

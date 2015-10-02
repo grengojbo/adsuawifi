@@ -1,0 +1,7 @@
+#!/bin/bash
+rm -f /tftpboot/login.tar
+cd /root/login
+mv index.html login.html
+chmod 777 ./login.html
+tar -cvf /tftpboot/login.tar ./
+

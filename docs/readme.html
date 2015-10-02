@@ -1,0 +1,635 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+    <title>Custom Webauth</title>
+  </head>
+  <body>
+    <h1>Custom Webauth</h1>
+    <!--Demo code by ddunlap@cisco.com and leejohns@cisco.com-->
+    <h2>Prerequisites for webauth testing (these need to work prior to
+      configurating custom webauth)</h2>
+    <ol>
+      <li> make sure the PC gets an ip address *without* webauth
+        configured (ssid alone, no authentication)
+        <p>
+        </p>
+      </li>
+      <li>make sure the PC can ping the default gateway *without*
+        webauth configured
+        <p>
+        </p>
+      </li>
+      <li>make sure the PC knows where DNS-server is (ipconfig /all)
+        *without* webauth configured
+        <p>
+        </p>
+      </li>
+      <li>make sure the PC can resolve names (with 'nslookup
+        &lt;blah&gt;') *without* webauth configured
+        <p>
+        </p>
+      </li>
+      <li>make sure the PC can get to the internet *without* webauth
+        configured
+        <p></p>
+      </li>
+    </ol>
+    Once those conditions are met, you can start to do more testing with
+    webauth.
+    <p> Note 1: For custom web-pages, you must be running 4.0.X code or
+      higher.</p>
+    <p>
+      Note 2:<br>
+      To force web-auth user to re-authenticate during testing (from the
+      CLI):<br>
+      "show client summary"<br>
+      "config client deauthenticate &lt;mac&gt;"</p>
+    <p>
+      To force web-auth user to re-authenticate during testing (from the
+      gui):<br>
+      Monitor &gt; Clients &gt; Choose client &gt; Remove</p>
+    <p>
+      The mac of the user can be seen on the PC (ipconfig /all) and
+      depending on the connection state, in the WLC gui (monitor &gt;
+      clients) or in "show client summary" from WLC CLI.</p>
+    <p>
+    </p>
+    <h2>Download and Edit of Custom Webauth Bundles</h2>
+    <h3>Download</h3>
+    Installation of custom web-auth bundles can be done via the gui
+    (under 'Commands' &gt; 'download' &gt; 'webauth bundle' from a
+    tftp-server) or the CLI:
+    <p>
+      transfer download serverip &lt;tftp-server&gt;<br>
+      transfer download filename &lt;tarball&gt;<br>
+      transfer download datatype webauthbundle<br>
+      transfer download path /<br>
+      transfer download start</p>
+    <p>
+      If the transfer is done using the CLI, debugs can be run to see
+      the status of the transfer:<br>
+    </p>
+    <pre>debug transfer tftp enable
+debug transfer trace enable
+</pre>
+    After the bundle is downloaded, the WLC is configured to use the
+    custom page in Security &gt; Web auth &gt; Web Login Page. Use of a
+    particular page for a wlan must also be configured under WLAN &gt;
+    choose wlan &gt; Security &gt; Layer 3 &gt; Over-ride Global Config
+    (Enable), Web Auth type (Customized/Downloaded), Login Page.
+    <p>
+    </p>
+    <h3>Edit</h3>
+    Please note that if the pages below work before editing but do not
+    work after editing then there is a problem with the editing. It is a
+    good idea to keep the original copy of our bundle, perhaps renamed.
+    <p>
+      Because of the way 'winzip' works, the hyperlinks from the readme
+      may not work, but you will be able to drag and drop the
+      directories/files.</p>
+    <p>
+      The webauth bundles to be located on the WLC must be in native
+      unix format, i.e. 'tar'.<br>
+      All tar files must contain a login.html (additional files may
+      exist but a file called login.html must exist in the bundle). If
+      there is not a file called login.html in the bundle, you will get
+      an 'Error on Extracting Files'.</p>
+    <p>
+      PC tar utilities which seem to work include:<br>
+      7-Zip<br>
+      IZarc<br>
+      PowerArchiver2007<br>
+      Stuffit</p>
+    <p>
+      If tarring on unix, the command is:<br>
+    </p>
+    <pre>tar -cvf &lt;output.tar&gt; login.html<br>
+</pre>
+    for example if there is a directory with login.html, aup.html,
+    yourlogo.jpg, entering:<br>
+    <pre>tar -cvf login.tar *.*
+</pre>
+    will result in those 3 files going into login.tar to be loaded on
+    the WLC:
+    <pre>a aup.html 3K
+a login.html 5K
+a yourlogo.jpg 69K
+</pre>
+    Whether the files were tarred on a PC or unix, the WLC's native unix
+    code untars the tar file on receipt/download.
+    <p>
+    </p>
+    <h2>Actual Pages</h2>
+    <h3>WLC Authentication</h3>
+    This is an example custom webauth bundle when authentication is in
+    use. This bundle goes on the WLC itself. It contains an Acceptable
+    Use Policy (aup.html) and graphic (yourlogo.jpg) besides the base
+    'login.html'.
+    <p>
+      <a href="./wap/login.tar">waa/login.tar</a>
+    </p>
+    <h3>WLC Passthrough</h3>
+    This is an example custom webauth bundle when passthrough (user does
+    'accept' or 'reject') is in use. This bundle goes on the WLC itself.
+    It contains an Acceptable Use Policy (aup.html) and graphic
+    (yourlogo.jpg) besides the base 'login.html'.
+    <p>
+      <a href="./wap/login.tar">wap/login.tar</a>
+    </p>
+    <h3>WLC Passthrough with Email</h3>
+    This is an example custom webauth bundle when passthrough (user does
+    'accept' or 'reject') is in use and there is a radius-server which
+    will be used to collect users' entered email addresses. The 'Email
+    Input' button under the WLAN also needs to be checked. The WLC will
+    not make a decision based on the users' email but will forward the
+    email to the radius-server in accounting records when it is entered.
+    While the WLC code was enhanced with code changes as a result of
+    CSCsu50080 which requires that the user put an '@' sign in the
+    email, there is nothing to prevent users from entering
+    mickey.mouse@guesswhere.com.
+    <p>
+      When email is configured, 'debug aaa all enable' will show the WLC
+      sending an accounting record to the radius-server with:
+    </p>
+    <pre>User-Name....bozo@the.clown
+Nas-Port (x1d)
+NAS-IPaddress (in 4 hex octets)
+framed-ip-address (that the user has in 4 hex octets)
+NAS-Identifier (system name of the WLC)
+Airespace/WLAN-Identifier (on the WLC)
+Calling-Station-Id (PC's mac)
+Called-station-id (WLC's ip address)
+</pre>
+    and other attributes including Acct-Session-Id, Acct-Authenticator,
+    Tunnel-Type xd, tunnel-medium-type x6, tunnel-group-id '5',
+    Acct-Status-Type.
+    <p>
+      This bundle goes on the WLC itself. It contains an Acceptable Use
+      Policy (aup.html) and graphic (yourlogo.jpg) besides the base
+      'login.html'.</p>
+    <p>
+      <a href="./waep/login.tar">waep/login.tar</a>
+    </p>
+    <h3>WLC Authentication with Customized Logout Page</h3>
+    This is an example custom webauth bundle when authentication is in
+    use. After successful login, the customized 'logout.html' page comes
+    up. After unsuccessful login, the customized failed.html comes up.
+    These pages will not be seen unless the user has popups enabled in
+    the browser. This bundle goes on the WLC itself. It contains an
+    Acceptable Use Policy (aup.html) and graphic (yourlogo.jpg) besides
+    the base 'login.html'.
+    <p>
+      <a href="./logout/login.tar">logout/login.tar</a>
+    </p>
+    <h3>WLC Bundle with Per-WLAN Pages</h3>
+    In WLC version 4.2 or greater, a webauth bundle with different views
+    for different wlans is possible with the actual page chosen under
+    the wlan. This is an example of multiple pages that can be used
+    per-wlan as a custom webauth bundle. This bundle goes on the WLC
+    itself. It contains multiple pages and an Acceptable Use Policy
+    (aup.html) and graphic (yourlogo.jpg) besides the base 'login.html'.
+    <p>
+      <a href="./multbundle/login.tar">multbundle/login.tar</a>
+    </p>
+    <h3>WLC Bundle with Animated Graphics</h3>
+    This is an example custom webauth bundle with animated gifs with
+    authentication in use. After successful login, the customized
+    'logout.html' page comes up. After unsuccessful login, the
+    customized failed.html comes up. These pages will not be seen unless
+    the user has popups enabled in the browser. This bundle goes on the
+    WLC itself. It contains an Acceptable Use Policy (aup.html) and
+    graphic (yourlogo.jpg) besides the base 'login.html'.
+    <p>
+      <a href="./ksink/login.tar">ksink/login.tar</a></p>
+    <p>
+    </p>
+    <h3>More Bundles</h3>
+    Bundle with flash plugin:
+    <p>
+      <a href="./flash/login.tar">flash/login.tar</a></p>
+    <p>
+      Bundle with username case modification:</p>
+    <p>
+      <a href="./case/login.tar">case/login.tar</a></p>
+    <p>
+      <b>Note for WLC Pages on External Server:</b>
+    </p>
+    <p>For any of the next 3 options, you will need to enable the WLC to
+      send the traffic to the external-server by going to the WLC &amp;
+      under security &gt; web login page, choosing 'External (Redirect
+      to External Server)' &amp; inputting the ip address of the
+      external web-server &amp; its url, for example web-server
+      192.168.5.104 with url http://192.168.5.20/login.html. (If you
+      have Microsoft WCS installed (wireless network management
+      software), you can put the files in C:\Program Files\WCS#\webnms\
+      directory to take advantage of its webserver for testing).</p>
+    <p>
+      If the WLC is a 2XXX, you do need a preauthentication acl on the
+      webauth wlan. If you do not have that configured, you will see a
+      weird 'looping' on the redirect url and it will fail. An example
+      of such an acl is below.</p>
+    <p>
+    </p>
+    <pre>10.1.1.1=WLC
+10.1.1.20=DNS
+10.1.1.23=DHCP
+10.1.1.57=external web-server   
+
+This acl allows dhcp to 10.1.1.23, DNS to 10.1.1.20, 
+icmp to everything, http/https to 10.1.1.1, and 
+http to the external webauth server.
+
+show acl detailed webauth
+                       Source                        Destination                Source Port  Dest Port
+Index  Dir       IP Address/Netmask              IP Address/Netmask        Prot    Range       Range    DSCP  Action      Counter 
+------ --- ------------------------------- ------------------------------- ---- ----------- ----------- ----- ------- -----------
+     1  In         0.0.0.0/0.0.0.0                10.1.1.23/255.255.255.255   17    68-68       67-67     Any Permit           0 
+     2 Out        10.1.1.23/255.255.255.255         0.0.0.0/0.0.0.0           17    67-67       68-68     Any Permit           0 
+     3  In         0.0.0.0/0.0.0.0                10.1.1.20/255.255.255.255   17     0-65535    53-53     Any Permit           0 
+     4 Out        10.1.1.20/255.255.255.255         0.0.0.0/0.0.0.0           17    53-53        0-65535  Any Permit           0 
+     5 Any         0.0.0.0/0.0.0.0                 0.0.0.0/0.0.0.0            1     0-65535     0-65535  Any Permit           0 
+     6  In         0.0.0.0/0.0.0.0               10.1.1.57/255.255.255.255    6     0-65535    80-80     Any Permit           0 
+     7 Out       10.1.1.57/255.255.255.255         0.0.0.0/0.0.0.0            6    80-80        0-65535  Any Permit           0 
+     8  In         0.0.0.0/0.0.0.0                10.1.1.1/255.255.255.255    6     0-65535    80-80     Any Permit           0 
+     9 Out        10.1.1.1/255.255.255.255         0.0.0.0/0.0.0.0            6     0-65535    80-80     Any Permit           0 
+    10  In         0.0.0.0/0.0.0.0                10.1.1.1/255.255.255.255    6     0-65535   443-443    Any Permit           0 
+    11 Out        10.1.1.1/255.255.255.255         0.0.0.0/0.0.0.0            6   443-443       0-65535  Any Permit           0 
+</pre>
+    <h3>WLC Pages on External Server with Authentication</h3>
+    These pages would go on an external webserver if that is to be used.
+    They should not be in a tar format. When the pages are on an
+    external webserver, the authentication is still performed on the WLC
+    (or radius-server if the WLC is configured for that), just the pages
+    reside on the external server. It is a good idea to be sure that the
+    pages come up ok on the external server <b>without</b> webauth
+    involved since webauth will not work unless the external webserver
+    works. If WCS software happens to be installed in the network, the
+    pages can be installed in its C:\Program Files\WCS#\webnms
+    directory.
+    <p>
+      <a href="./waaext/">waaext</a>
+    </p>
+    <h3>WLC Pages on External Server with Passthrough</h3>
+    These pages would go on an external webserver if that is to be used.
+    They should not be in a tar format. When the pages are on an
+    external webserver, the passthrough is still performed on the WLC,
+    just the pages reside on the external server. It is a good idea to
+    be sure that the pages come up ok on the external server <b>without</b>
+    webauth involved since webauth will not work unless the external
+    webserver works. If WCS software happens to be installed in the
+    network, the pages can be installed in its 'webnms' directory.
+    <p>
+      <a href="./wapext/">wapext</a>
+    </p>
+    <h3>WLC Pages on External Server with Passthrough and Email</h3>
+    These pages would go on an external webserver if that is to be used.
+    They should not be in a tar format. When the pages are on an
+    external webserver, the passthrough is still performed on the WLC as
+    is sending the entered email to the radius-server, just the pages
+    reside on the external server. The 'Email Input' button under the
+    WLAN also needs to be checked. It is a good idea to be sure that the
+    pages come up ok on the external server <b>without</b> webauth
+    involved since webauth will not work unless the external webserver
+    works. If WCS software happens to be installed in the network, the
+    pages can be installed in its 'webnms' directory.
+    <p>
+      <a href="./waepext/">waepext</a>
+    </p>
+    <h2>Caveats</h2>
+    <h3>Browser Support</h3>
+    Supported browsers for webauth are listed in the WLC per-version
+    release-notes. If a browser is not listed in the release-notes, it
+    still may work but has not been thoroughly tested. If one browser
+    version works and another does not work at all, it is possible that
+    the non-working browser does not support javascript, does not
+    support redirects, renders pages poorly, etc. There is nothing that
+    can be changed in the WLC configuration or custom web pages to 'add
+    browser support'.
+    <p>
+    </p>
+    <h3>SSL Cipher Options</h3>
+    Different browsers may support different ssl cipher options. The
+    ciphers in place on the WLC can be determined with 'show network
+    summary' from the CLI. If a supported web browser does not work,
+    this could be due to incompatible cipher options. The WLC cipher
+    options can be changed - the following commands generally allow more
+    browsers to work by not requirin 128-bit ciphers and also enabling
+    sslv2:<br>
+    <pre>config network secureweb cipher-option high disable
+(^128-bit ciphers required or not - disable means 128-bit ciphers not required)
+config network secureweb cipher-option sslv2 enable
+(^Permits both the default sslv3 and the weaker sslv2)
+</pre>
+    <h3>Per-wlan Pages</h3>
+    In WLC version 4.2 or greater, a webauth bundle with different views
+    for different wlans is possible. The login.html, login-wlana.html,
+    login-wlanb.html files are placed in one tar file and downloaded.
+    Then by doing into WLAN &gt; Security &gt; Layer 3 &gt; Web auth
+    type (Customized/Downloaded), you can choose the 'Login Page' to use
+    (from the bundle).
+    <p> </p>
+    <h3>Preauthentication ACLs</h3>
+    With the 2XXX platforms, a preauthentication acl must be used if
+    authentication/passthrough is to be redirected to an <b>external</b>
+    server. The acl should allow dhcp, dns, http, and icmp at a minimum.
+    There are examples of WLC acls on the Cisco web-site.
+    <p>
+    </p>
+    <h3>Encryption</h3>
+    Webauth initial connections are https; subsequent traffic is http
+    unless wep or wpa-psk encryption is also in use.
+    <p>
+    </p>
+    <h3>MIE Pragma No-cache</h3>
+    The webpages supplied are coded to deal with Microsoft Internet
+    Explorer's buffering behavior:
+    <p>
+      If you see 'odd behavior' where MIE works ok when the 'general
+      tab' has 'check for newer version of stared pages' instead of the
+      default 'every visit to the page', then you are encountering a bug
+      in the way MIE caches files. The examples here are coded to avoid
+      the bug. If you do your own coding:</p>
+    <p>
+    </p>
+    <pre>"There is a 64K buffer that must be filled before a page is cached in
+IE. The problem is that the vast majority of the pages using the Pragma
+statement put it between the HEAD tags.<p>
+
+The HEAD loads and the Pragma comes into play. The browser gets the go
+ahead to not cache the page, however there is not yet a page to not
+cache. Since the page hasn't filled the 64K buffer, there's no page so
+the Pragma is ignored. Thus...the page is cached.
+The solution is to play to the buffer. If you're really serious about
+the Pragma working, place another set of HEAD tags at the bottom of the
+document, before the end HTML tag and re-enter the Pragma. This is a
+suggestion straight from Microsoft Support. The page would look like
+             this:</p><p>
+&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;TITLE&gt;---&lt;/TITLE&gt;
+&lt;META HTTP-EQUIV="Pragma" CONTENT="no-cache"&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+Text in the Browser Window
+&lt;/BODY&gt;
+&lt;HEAD&gt;
+&lt;META HTTP-EQUIV="Pragma" CONTENT="no-cache"&gt;
+&lt;/HEAD&gt;
+&lt;/HTML&gt;
+&lt;/pre&gt;
+"
+</p></pre>
+    <h3>Javascript Variables</h3>
+    The 4 variables that are available for processing in javascript are:
+    <pre>the AP MAC
+redirect url (the original place the user was going)
+wlan name
+switch url (the redirect formed)
+</pre>
+    These are seen in the html as 'args.whatever'.
+    <p>
+    </p>
+    <h3>Use of DNS Field</h3>
+    While external DNS does need to work for webauth to function well,
+    if there is a desire for the user to see a FQDN on redirect instead
+    of the virtual ip address (such as 1.1.1.1), the DNS field under
+    Controller &gt; Interfaces &gt; Virtual interface can be populated.
+    This should agree with what's in external DNS. This causes redirect
+    appear as FQDN for the user.
+    <p>
+    </p>
+    <h3>Virtual IP Address</h3>
+    For testing purposes, one should be able to bring up
+    https://&lt;virtual-ip&gt;/login.html. Check to be sure that the
+    virtual ip address is correct in 'show run-config' and reboot the
+    WLC after saving the configuration.
+    <p>
+    </p>
+    <h3>Post Login Redirect</h3>
+    If there is a desire to redirect the user to a particular web-page
+    after successful login and this option is not in the Security &gt;
+    Webauth gui, the redirect can be entered manually from the CLI:
+    <p> config custom-web redirectUrl <url>' </url></p>
+    <p>
+      save config</p>
+    <p>
+    </p>
+    <h3>Linking within Webauth Bundle</h3>
+    The ability to link to other pages in webauth bundle or have
+    functioning javascript popups is somewhat version-specific due to
+    CSCso58911. The ability to link to other pages, for example, the
+    where user starts at login.html then there is a hyperlink to
+    readmoreaboutit.html within the bundle, should normally work as
+    should javascript popups (if enabled in the browser).
+    <p>
+    </p>
+    <h3>Customized Logout and Failure Pages</h3>
+    Customized login failure and logout pages are supported as a result
+    of CSCsj14378.
+    <p>
+    </p>
+    <h3>Maximum File-name and Bundle Size</h3>
+    The maximum file-name size for webauth and within webauth is 32
+    characters. "/images/cisco-webauth-logo-white-cropped.gif" is too
+    long.
+    <p>
+      The maximum file-size for webauth untarred files is 1M.</p>
+    <p>
+    </p>
+    <h3>HTTP vs. HTTPS</h3>
+    Certificate warnings will be seen with https, not http. If the
+    warnings are of concern, especially with passthrough, there is
+    currently no support for 'http' webauth. 'https' webauth can be
+    turned off in Management &gt; https/http but by turning on http and
+    turning off https, this affects all operations on the WLC including
+    WLC management (not just webauth).
+    <p>
+    </p>
+    <h3>Certificate Warnings</h3>
+    Are unrelated to custom webauth.
+    <p>
+      Messages you might see could include:</p>
+    <p>
+      The security certificate was issued by a company you have not
+      chosen to trust. View the certificate to determine whether you
+      want to trust the certifying authority.</p>
+    <p>
+      Warnings may be seen if the CN on the certificate does not
+      resolve, forward &amp; reverse lookup don't both work, lookup
+      resolves to multiple names (should only resolve to the virtual),
+      the security certificate date is invalid, or most typically when a
+      WLC self-signed certificate is in use.</p>
+    <p>
+      If you are get a certificate warning with the WLC if there is no
+      certificate on the PC that matches that on the WLC, this would be
+      because there is no certificate in the PC's trusted root store
+      that matches the self-signed certificate on the WLC. If you do
+      'certmgr.msc' on the PC from the dos prompt &amp; look at Trusted
+      Root Certs, there is a large list of certs that come with the PC.</p>
+    <p>
+      To avoid certificate warnings as a result of the WLC's self-signed
+      certificate, you can either:</p>
+    <p>
+      install the WLC self-signed certificate on the PC when prompted </p>
+    <p>
+      or</p>
+    <p>
+      purchase a well-known 3rd party certificate for the WLC (to match
+      one of the 3rd party vendors listed in the PC's store) and install
+      it on the WLC.</p>
+    <p>
+      This document does not cover installation of non-self-signed
+      certificates but there is information at: <br>
+      <a href="http://www.cisco.com/warp/public/102/csr_wlc.html">http://www.cisco.com/warp/public/102/csr_wlc.html</a><br>
+      that shows how to import an unchained 3rd party certificate
+      (earlier than WLC 5.0 code).<br>
+      <a
+href="http://www.cisco.com/en/US/products/ps6366/products_configuration_example09186a0080a77592.shtml">http://www.cisco.com/en/US/products/ps6366/products_configuration_example09186a0080a77592.shtml</a><br>
+      shows how to import a chained 3rd party certificate (possible in
+      5.0 WLC code or later).</p>
+    <p>
+    </p>
+    <h2>Radius</h2>
+    When webauth authentication is involved, the WLC will check for
+    username/password locally (on the WLC - Security Local Net Users)
+    then send the request to radius (if there is one defined globally)
+    if not found locally in the WLC database. The attributes sent are
+    listed below. If the radius-server is sophisticated enough, it
+    should be able to do refuse/allow based on the attributes sent in
+    addition to the username/password. Radius attribute traffic can be
+    seen with 'debug aaa all enable'.
+    <p>
+      Assuming the WLC local database works, you then define the
+      radius-server under Security &gt; radius-authentication for the
+      remote authentication. You also need to tell the radius-server
+      about the WLC, ensuring that the keys match on both devices. If
+      you have configured a radius-server for accounting under security,
+      this will cause the username of the user to be sent in the
+      accounting record.</p>
+    <p>
+    </p>
+    <h3>Radius attributes sent for authentication </h3>
+    <pre>Username (attribute 1)
+Password (attribute 2 is encrypted):
+Service-Type (attribute 6 = login)
+NAS-IP-Address (attribute 4 = 4 hex bytes of WLC ip address)
+NAS-Identifier (attribute 32 = name of WLC)
+NAS-Port-Type (attribute 61 = x13 = dec-19 = wireless-802.11)
+Vendor-specific (attribute 26 = the Airespace-WLAN-Id from the WLC - the number)
+Calling-Station-ID (attribute 31 = NIC ip address in dotted-decimal)
+Called-Station-ID (attribute 30 = WLC ip address in dotted-decimal)
+</pre>
+    <h3>Radius attributes honored in access-accept</h3>
+    Radius attributes honored in access-accept - service-type can be '1'
+    (login) or nothing returned but cannot be 'administrative==6'.<br>
+    Access-list name (ACL-Name) and QoS (QoS-Level) settings can also be
+    passed down using vendor-specific attributes.
+    <p>
+    </p>
+    <h3>Radius attributes sent in webauth accounting</h3>
+    <pre><b>Start:</b><p>
+User-Name (attribute 1 - this will be the username unless it's passthrough in which case it is the mac or email entered)
+Nas-Port (attribute 5 = x1d = 29 (if LAG))
+Nas-Ip-Address (attribute 4 = ip of WLC in dotted decimal)
+Framed-IP-Address (attribute 8 = ip of NIC in dotted decimal)
+Class attribute (attribute 25 if that was sent by the radius-server)
+NAS-Identifier (attribute 32 = WLC name)
+Vendor-specific (attribute 26 = the Airespace-WLAN-Id from the WLC - the number)
+Acct-Session-Id (attribute 44)
+Acct-Authenticate (attribute 45)
+Acct-Status-Type (attribute 40)
+Tunnel-Type (attribute 64)
+Tunnel-Medium-Type (attribute 65)
+Tunnel-Private-Group-Id (attribute 81)
+Calling-Station-ID (attribute 31 = NIC ip address in dotted-decimal)
+Called-Station-ID (attribute 30 = WLC ip address in dotted-decimal)
+The Called-Station-ID default format is the WLC ip address but depending on 
+how it is configured in the WLC Security main screen, may be 
+the WLC or AP mac address such as 00-11-22-33-44-55-66
+</p></pre>
+    <b>Interim:</b>
+    <pre>User-Name (attribute 1 - this will be the username unless it's passthrough in which case it is the mac or email entered)
+Nas-Port (attribute 5 = x1d = 29 (if LAG))
+Nas-Ip-Address (attribute 4 = ip of WLC in dotted decimal)
+Framed-IP-Address (attribute 8 = ip of NIC in dotted decimal)
+Class attribute (attribute 25 if that was sent by the radius-server)
+NAS-Identifier (attribute 32 = WLC name)
+Vendor-specific (attribute 26 = the Airespace-WLAN-Id from the WLC - the number)
+Acct-Session-Id (attribute 44)
+Acct-Authenticate (attribute 45)
+Tunnel-Type (attribute 64)
+Tunnel-Medium-Type (attribute 65)
+Tunnel-Private-Group-Id (attribute 81)
+Acct-Status-Type (attribute 40)
+Acct-Input-Octets (attribute 42)
+Acct-Output-Octets (attribute 43)
+Acct-Input-Packets (attribute 47)
+Acct-Output-Packets (attribute 48)
+Acct-Session-Time (attribute 46)
+Acct-Delay-Time (attribute 41)
+Calling-Station-ID (attribute 31 = NIC ip address in dotted-decimal)
+Called-Station-ID (attribute 30 = WLC ip address in dotted-decimal)
+The Called-Station-ID default format is the WLC ip address but depending on 
+how it is configured in the WLC Security main screen, may be 
+the WLC or AP mac address such as 00-11-22-33-44-55-66
+</pre>
+    <b>Stop:</b>
+    <pre>User-Name (attribute 1 - this will be the username unless it's passthrough in which case it is the mac or email entered)
+Nas-Port (attribute 5 = x1d = 29 (if LAG))
+Nas-Ip-Address (attribute 4 = ip of WLC in dotted decimal)
+NAS-Identifier (attribute 32 = WLC name)
+Vendor-specific (attribute 26 = the Airespace-WLAN-Id from the WLC - the number)
+Acct-Session-Id (attribute 44)
+Acct-Authenticate (attribute 45)
+Acct-Status-Type (attribute 40)
+Acct-Input-Octets (attribute 42)
+Acct-Output-Octets (attribute 43)
+Acct-Input-Packets (attribute 47)
+Acct-Output-Packets (attribute 48)
+Acct-Terminate-Cause (attribute 49)
+Acct-Session-Time (attribute 46)
+Calling-Station-ID (attribute 31 = NIC ip address in dotted-decimal)
+Called-Station-ID (attribute 30 = WLC ip address in dotted-decimal)
+The Called-Station-ID default format is the WLC ip address but depending on 
+how it is configured in the WLC Security main screen, may be 
+the WLC or AP mac address such as 00-11-22-33-44-55-66
+</pre>
+    <h2>Troubleshooting</h2>
+    <h3>show commands</h3>
+    <b>WLC</b>
+    <p>
+    </p>
+    <pre>show interface summary
+show interface virtual
+show client detailed &lt;mac&gt;
+show custom-web
+show wlan #
+show acl summary
+show acl detail &lt;name&gt;
+show sysinfo
+show run-config
+show radius auth statistics
+</pre>
+    <b>PC</b>
+    <p>
+    </p>
+    <pre>nslookup &lt;destination&gt; *without* webauth
+ipconfig /all
+</pre>
+    <h3>debug commands</h3>
+    WLC debugs:
+    <pre>debug client &lt;##:##:##:##:##:##&gt;
+debug aaa all enable
+debug pem state enable
+debug pem events enable
+debug dhcp message enable
+debug dhcp packet enable
+debug pm ssh-appgw enable
+debug pm ssh-tcp enable
+debug aaa all enable
+
+</pre>
+  </body>
+</html>

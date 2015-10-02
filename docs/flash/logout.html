@@ -1,0 +1,56 @@
+<html>
+<head>
+<script>
+function submitAction(){
+document.forms[0].submit();
+}
+
+function checkUserStatus(){
+// Check Illegal Access of logout Page
+// if userStatus == 0, it means user hasn't logged in
+// so just redirect the user to login.html page
+    if(document.forms[0].userStatus.value != 0)
+{
+        location.href = "login.html";
+    }
+	else if(document.forms[0].userStatus.value == 0)
+	{
+ 	document.write('<p>Login was successful!</p>');
+        document.write('<html><head><body bgcolor=#FFEECC topmargin="50" marginheight="50">');
+        document.write('<img src="parrot.gif">');
+        document.write('</html></head></body>');
+}
+}
+</script>
+<meta http-equiv="Pragma" content="no-cache">
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<title>Logout of Your_Company_Name_Here</title>
+</head>
+<body bgcolor="#FFEECC" onload="checkUserStatus()">
+<form method="post" action="http://1.1.1.1/logout.html <blocked::http://1.1.1.1/logout.html> ">
+  <div align="center">
+    <h1>Logout of Your_Company_Name_Here</h1>
+    <table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center" class="caption">
+<!-- can replace the below string with your customised string -->
+          Login Successful  !<br><p>
+          You can now use all regular network services over the wireless network.<br><p>
+          Please retain this small logout window in order to logoff when done.<br>
+        </td>
+      </tr>
+    <tr>
+  <td align="center">
+          <td colspan="2"><input type="button" name="Submit" value="Submit" class="button" onclick="submitAction();">
+        </td>
+      </tr>
+    </table>
+  </div>
+  <input TYPE="hidden" NAME="userStatus" SIZE="16" MAXLENGTH="15" VALUE="0" EMWEB_TYPE=DECIMAL_UINT> 
+<input TYPE="hidden" NAME="err_flag" SIZE="16" MAXLENGTH="15" VALUE="0" EMWEB_TYPE=DECIMAL_UINT>
+  <input TYPE="hidden" NAME="err_msg" SIZE="32" MAXLENGTH="31" VALUE="">
+ 
+
+</form>
+</body>
+</html>

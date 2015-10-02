@@ -1,0 +1,129 @@
+<html>
+<head>
+
+<meta http-equiv="Pragma" content="no-cache"> <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1"> 
+<title><img src="./welkom4.gif"></title>
+
+<script>
+
+function submitAction(){
+      var link = document.location.href;
+      var searchString = "redirect=";
+      var equalIndex = link.indexOf(searchString);
+      var redirectUrl = "";
+
+      if (document.forms[0].action == "") {
+      var url = window.location.href;
+      var args = new Object();
+      var query = location.search.substring(1);
+      var pairs = query.split("&");
+          for(var i=0;i<pairs.length;i++){
+              var pos = pairs[i].indexOf('=');
+              if(pos == -1) continue;
+              var argname = pairs[i].substring(0,pos);
+              var value = pairs[i].substring(pos+1);
+              args[argname] = unescape(value);
+          }
+          document.forms[0].action = args.switch_url;       
+      }       
+      if(equalIndex >= 0) {
+            equalIndex += searchString.length;
+            redirectUrl = "";
+            redirectUrl += link.substring(equalIndex);
+      }
+      if(redirectUrl.length > 255)
+      redirectUrl = redirectUrl.substring(0,255);
+      document.forms[0].redirect_url.value = redirectUrl;
+      document.forms[0].buttonClicked.value = 4;
+      document.forms[0].submit();
+}
+
+function loadAction(){
+     var url = window.location.href;
+     var args = new Object();
+     var query = location.search.substring(1);
+     var pairs = query.split("&");
+     for(var i=0;i<pairs.length;i++){
+          var pos = pairs[i].indexOf('=');
+          if(pos == -1) continue;
+          var argname = pairs[i].substring(0,pos);
+          var value = pairs[i].substring(pos+1);
+          args[argname] = unescape(value);
+     }
+
+
+     document.forms[0].action = args.switch_url;
+
+     // This is the status code returned from webauth login action
+     // Any value of status code from 1 to 5 is error condition and user
+     // should be shown error as below or modify the message as it suits
+     // the customer
+
+     if(args.statusCode == 1){
+        alert("You are already logged in. No further action is required on your part.");
+	document.write('<html><head><body bgcolor=#FFEECC topmargin="50" marginheight="50">');
+	 document.write('<img src="goober.jpg">');
+	document.write('</html></head></body>');
+     }
+     else if(args.statusCode == 2){
+        alert("You are not configured to authenticate against web portal. No further action is required on your part.");
+     }
+     else if(args.statusCode == 3){
+        alert("The username specified cannot be used at this time. Perhaps the user is already logged into the system?");
+     }
+     else if(args.statusCode == 4){
+        alert("Wrong username and password. Please try again.");
+     }
+     else if(args.statusCode == 5){
+        alert("The User Name and Password combination you have entered is invalid.  Please try again.");
+	alert( "AP mac address is " + args.ap_mac + "; status code is " + args.statusCode + "; redirect is " + args.redirect + "; wlan is " + args.wlan + "; switch url is " + args.switch_url ); 
+	document.write('Login failed miserably.<p>');
+	document.write('<html><head><body bgcolor=#FFEECC topmargin="50" marginheight="50">');
+	document.write('<img src="arnold.gif">');
+	document.write('</html></head></body>');
+     }
+}
+// The wav file will not work due to a bug - CSCtb39368 - it is a parrot squawking
+
+</script>
+
+</head>
+
+<body bgcolor=#000000 topmargin="50" marginheight="50" onload="loadAction();"> <form method="post"> <input TYPE="hidden" NAME="buttonClicked" SIZE="16" MAXLENGTH="15" value="0"> <input TYPE="hidden" NAME="redirect_url" SIZE="255" MAXLENGTH="255" VALUE=""> <input TYPE="hidden" NAME="err_flag" SIZE="16" MAXLENGTH="15" value="0">
+
+<table border="0" cellspacing="0" cellpadding="0" > <tr> <td></td></tr>
+<h1 align=center><embed width="786" type="application/x-shockwave-flash" height="180" play="true" loop="true" menu="true" src="coolsnake.pdf" quality="high" bgcolor="#000000"></embed></font></h1>
+<embed src="nuggetwhatinworld.wav" autostart=true loop=true volume=100 hidden=true><NOEMBED><BGSOUND src="nuggetwhatinworld.wav"></NOEMBED></embed>
+<font color="#FFFFFF">
+<p><b>Accessing Company Public Network From Your Wireless Device</b></p>
+The Company provides Internet access points at no charge in selected areas for guests with portable computers or devices capable of receiving wireless signals. You will be able to access the Internet from your wireless device when sitting within range of an access point. Guests are expected to use the wireless access in a legal and responsible manner. By using this wireless access network, the user acknowledges that he/she is subject to, and agrees to abide by all laws, and all state and federal rules and regulations applicable to Internet use.<p>
+<img src="./Explode-06-june.gif">
+<p><b>Terms and Conditions of Use</b></p>
+Guests will need a notebook/laptop computer or other device equipped with a wireless card that supports the WiFi standard.<p>
+The Company assumes no responsibility for the safety of equipment.</p>
+<img src="./skull2.gif">
+<p><b>Security Considerations</b></p>
+Wireless access is by nature an insecure medium. As with most guest wireless networks, any information being sent or received over the Company wireless network could potentially be intercepted by another wireless user. Cautious and informed wireless users should not transmit their credit card information, passwords and any other sensitive personal information while using a wireless "hot spot".<p>
+Anyone using the Company wireless network is forewarned that there can be no expectation of privacy when using the wireless network. Users assume all associated risks and agree to hold harmless the Company and its employees for any personal information (e.g. credit card) that is compromised, or for any damage caused to users' hardware or software due to electric surges, security issues or consequences caused by viruses or hacking. All wireless access users should have up-to-date virus protection on their personal laptop computers or wireless devices, as well as staying up-to-date with applicable OS security patches.<p>
+<img src="./skull.gif">
+<p><b>Disclaimer</b></p>
+The Company is providing wireless connectivity in this facility as a guest service and offers no guarantees that any use of the wireless connection is in any way secure, or that any privacy can be protected when using this wireless connection. Use of this wireless connection is entirely at the risk of the user, and the Company is not responsible for any loss of any information that may arise from the use of the wireless connection, or for any loss, injury, or damages resulting from the use of the wireless connection.<p>
+<img src="./Skeleton-18-june.gif">
+<p><b>Agreement</b></p>
+By entering "I agree" below, you are entering into a binding agreement.<p>
+</font>
+
+<h3 align=center><font color="#FFFFFF">Please enter your username/password</font></h3>
+<h4 align=center><font color="#FFFFFF">Username<input type="TEXT" name="username" SIZE="25" MAXLENGTH="63" VALUE=""></font></h4>
+<h4 align=center><font color="#FFFFFF">Password<input type="Password" name="password" SIZE="25" MAXLENGTH="63" VALUE=""></font></h4>
+<h4 align=center><font size="5" color="#FFFFFF"><input type="button" name="Submit" value="I Agree with Policy Above" class="button" onclick="submitAction();"></h4></font><p></p>
+<font color="#FFFFFF">
+For assistance, please contact the lobby administrator at 555-1212 (lobby.admin@company.com)</p>
+</font>
+</td>
+</tr>
+</table> 
+</div>
+</form>
+</body>
+</html>

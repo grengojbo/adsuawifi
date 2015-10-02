@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Passage Mall Wi-Fi</title>
+<link rel="stylesheet" href="./captiveportal-pure-min.css" media="screen">
+<link rel="stylesheet" href="./captiveportal-main.css" media="screen">
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="expires" content="-1" />
+</head>
+<body>
+<div class="pure-g-r" id="layout">
+<div class="logo pure-u-1"><a href="http://passage-mall.com.ua/"><img src="captiveportal-logo2.png" height="60" width="300" alt="Passage Mall"></a></div>
+<div class="pure-u-1" id="iphone">
+<form method="post" action="$PORTAL_ACTION$" accept-charset="UTF-8" role="form">
+    <input name="zone" type="hidden" value="passage">
+    <input name="redirurl" type="hidden" value="https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=974602256&mt=8#">
+    <input name="accept" type="submit" style="background:url(captiveportal-app-store_ru.jpg) no-repeat;border:none;width:300px;height:98px;margin-bottom:5px;">
+  </form>
+</div>
+<div class="pure-u-1" id="android">
+<form method="post" action="$PORTAL_ACTION$" accept-charset="UTF-8" role="form">
+    <input name="zone" type="hidden" value="passage">
+    <input name="redirurl" type="hidden" value="https://play.google.com/store/apps/details?id=dn.passage">
+    <input name="accept" type="submit" style="background:url(captiveportal-google-play_ru.jpg) no-repeat;border:none;width:300px;height:98px;margin-bottom:5px;">
+  </form>
+</div>
+<div class="pure-u-1" id="footer">
+  <form method="post" action="$PORTAL_ACTION$" accept-charset="UTF-8" role="form">
+    <input name="zone" type="hidden" value="passage">
+    <input name="redirurl" type="hidden" value="https://www.facebook.com/passage.mall">
+    <input name="accept" type="submit" class="pure-button pure-input-1-1 pure-button-primary" value="Go internet" >
+    </form>
+</div>
+</div>
+<script>
+var ua = navigator.userAgent.toLowerCase();
+var isAndroid = ua.indexOf("android") > -1;
+var isIphone = /iphone|ipod|ipad/.test(ua);
+if (isIphone) {
+  document.getElementById('android').remove();
+  document.getElementById("layout").classList.add('mobile');
+} else if (isAndroid) {
+  document.getElementById('iphone').remove();
+  document.getElementById("layout").classList.add('mobile');
+}
+</script>
+</body>
+</html>

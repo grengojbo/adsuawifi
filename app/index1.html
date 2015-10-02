@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ocean Plaza Wi-Fi</title>
+<link rel="stylesheet" href="./pure-min.css" media="screen">
+<link rel="stylesheet" href="./main.css" media="screen">
+<script type="text/javascript" src="openx.adserver.js"></script>
+<script>
+
+function submitAction(){
+      var link = document.location.href;
+      var searchString = "redirect=";
+      var equalIndex = link.indexOf(searchString);
+      var redirectUrl = "";
+      var urlStr = "";
+      if(equalIndex > 0) {
+            equalIndex += searchString.length;
+            urlStr = link.substring(equalIndex);
+            if(urlStr.length > 0){
+				redirectUrl += urlStr;
+  			    if(redirectUrl.length > 255)
+				    redirectUrl = redirectUrl.substring(0,255);
+			    document.forms[0].redirect_url.value = redirectUrl;
+			}
+      }
+
+      document.forms[0].buttonClicked.value = 4;
+      document.forms[0].submit();
+}
+
+function loadAction(){
+      var url = window.location.href;
+      var args = new Object();
+      var query = location.search.substring(1);
+      var pairs = query.split("&");
+      for(var i=0;i<pairs.length;i++){
+          var pos = pairs[i].indexOf('=');
+          if(pos == -1) continue;
+          var argname = pairs[i].substring(0,pos);
+          var value = pairs[i].substring(pos+1);
+          args[argname] = unescape(value);
+      }
+      //alert( "AP MAC Address is " + args.ap_mac);
+      //alert( "The Switch URL is " + args.switch_url);
+      document.forms[0].action = args.switch_url;
+
+      // This is the status code returned from webauth login action
+      // Any value of status code from 1 to 5 is error condition and user
+      // should be shown error as below or modify the message as it suits
+      // the customer
+      if(args.statusCode == 1){
+        alert("You are already logged in. No further action is required on your part.");
+      }
+      else if(args.statusCode == 2){
+        alert("You are not configured to authenticate against web portal. No further action is required on your part.");
+      }
+      else if(args.statusCode == 3){
+        alert("The username specified cannot be used at this time. Perhaps the username is already logged into the system?");
+      }
+      else if(args.statusCode == 4){
+        alert("Wrong username and password. Please try again.");
+      }
+      else if(args.statusCode == 5){
+        alert("The User Name and Password combination you have entered is invalid. Please try again.");
+      }
+}
+
+</script>
+</head>
+<body topmargin="50" marginheight="50" onload="loadAction();">
+<form method="post">
+<input TYPE="hidden" NAME="buttonClicked" SIZE="16" MAXLENGTH="15" value="0">
+<input TYPE="hidden" NAME="redirect_url" SIZE="255" MAXLENGTH="255" VALUE="">
+<input TYPE="hidden" NAME="err_flag" SIZE="16" MAXLENGTH="15" value="0">
+<input TYPE="hidden" NAME="info_flag" SIZE="16" MAXLENGTH="15" value="0">
+<input TYPE="hidden" NAME="info_msg" SIZE="32" MAXLENGTH="31" value="0">
+
+<div class="pure-g-r" id="layout">
+<div class="pure-u-1" id="wifi-ad"></div>
+<script type='text/javascript'><!--//<![CDATA[
+	var zone_phone = 13;
+	var zone_tablet = 14;
+	var zone_desktop = 15;
+
+	function sky5url (zone_id) {
+		var script;
+		var m3_u = (location.protocol=='https:'?'https://ads.sky5.com.ua/openx/www/delivery/ajs.php':'http://ads.sky5.com.ua/openx/www/delivery/ajs.php');
+		
+		var m3_r = Math.floor(Math.random()*99999999999);
+
+		console.info('load zoneid: ' + zone_id);
+		//script = "<scr"+"ipt type='text/javascript' src='" + m3_u + "?zoneid=" + zone_id;
+		url = m3_u + "?zoneid=" + zone_id + "&amp;loc=" + escape(window.location);
+
+
+        if (!document.MAX_used) document.MAX_used = ',';
+        if (document.MAX_used != ',') url += "&amp;exclude=" + document.MAX_used;
+        url += (document.charset ? '&amp;charset='+document.charset : (document.characterSet ? '&amp;charset='+document.characterSet : ''));
+        if (document.referrer) url += "&amp;referer=" + escape(document.referrer);
+        if (document.context) url += "&context=" + escape(document.context);
+        if (document.mmm_fo) url += "&amp;mmm_fo=1";
+
+        return url;
+
+	}
+
+	var zone_id = zone_desktop;
+    
+   //var sky_out;
+   //sky_out = sky5url(zone_id);
+   /*
+   document.write ("<scr"+"ipt type='text/javascript' src='"+m3_u);
+   document.write ("?zoneid=" + zone_id);
+   document.write ('&amp;cb=' + m3_r);
+   if (document.MAX_used != ',') document.write ("&amp;exclude=" + document.MAX_used);
+   document.write (document.charset ? '&amp;charset='+document.charset : (document.characterSet ? '&amp;charset='+document.characterSet : ''));
+   document.write ("&amp;loc=" + escape(window.location));
+   if (document.referrer) document.write ("&amp;referer=" + escape(document.referrer));
+   if (document.context) document.write ("&context=" + escape(document.context));
+   if (document.mmm_fo) document.write ("&amp;mmm_fo=1");
+   document.write ("'><\/scr"+"ipt>");
+   */
+ 	
+   var OA_zones =
+			{
+				'wifi-ad' : 15
+			}
+   window.onload = function()
+			{
+				//utility
+				//openx.init({
+				//  url: 'http://ads.sky5.com.ua/openx/www/delivery/spcjs.php'
+				//});
+				openx.init({
+					zone: {
+						'wifi-ad': {
+							phone: 13,
+							table: 14
+						}
+					},
+					//mediacss: {
+					//	phone: '(max-width: 480px)',
+						//table: '(min-width: 769px)'
+						//phone: '(min-width: 769px)',
+					//	table: '(max-width: 768px)'
+					//},
+					url: 'http://ads.sky5.com.ua/spc.js'
+					//url: 'http://ads.sky5.com.ua/ajs/'
+				});
+				new loadActionCisco();
+			}
+//]]>--></script>
+<div class="pure-u-1"><div  id="footer"><button class="pure-button pure-input-1-1 pure-button-primary" onclick="submitAction();">Internet</button></div></div>
+</div>
+</form>
+</body>
+</html>
+

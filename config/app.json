@@ -1,0 +1,10 @@
+{
+	"name": "appName",
+	"path": "username/name-app/current",
+	"dev": {
+		"host": "localhost"
+	},
+	"production": {
+		"path": "username/name-app/current"
+	}
+}
